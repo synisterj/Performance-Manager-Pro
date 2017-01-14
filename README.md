@@ -6,3 +6,10 @@ Author: Jason Edelbrock
 Date: 1/13/2017
 
 E-Mail: jayedelbrock@icloud.com
+
+# NOTES
+Source is compile ready under VisualStudio 2015 (VB.Net).
+
+All other VisualStudio versions I give no promises, you've been warned!
+
+DO NOT post issues if using a different version than VisualStudio 2015 and are generating compiler errors. 
