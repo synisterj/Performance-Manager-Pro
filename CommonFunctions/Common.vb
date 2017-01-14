@@ -1,12 +1,12 @@
 ﻿Public Class Functions
-    Public Function Encrypt(ByVal sender As Object, ByVal data As String, ByVal hashtype As String, ByVal passphrase As String, ByVal salt As String, Optional ByVal inivec As string = "@sYGD54g83HRyhv7", Optional ByVal iterations As Integer = 2, Optional ByVal keysize As Integer = 256) As String
+    Public Function Encrypt(ByVal sender As Object, ByVal data As String, ByVal hashtype As String, ByVal phrase As String, ByVal salt As String, Optional ByVal inivec As String = "@sYGD54g83HRyhv7", Optional ByVal iterations As Integer = 2, Optional ByVal keysize As Integer = 256) As String
         Encrypt = Nothing
-        Dim PassPhrase As String = passphrase
-        Dim Salt As String = salt
+        Dim PassPhrase As String = phrase
+        Dim SaltValue As String = salt
         Dim HashAlgorithm As String = hashtype
         Dim PasswordIterations As Integer = iterations
         Dim InitVector As String = inivec
-        Dim KeySize As Integer = keysize
+        Dim InitKeySize As Integer = keysize
         Try
             Dim InitVectorBytes As Byte() = Text.Encoding.ASCII.GetBytes(InitVector)
             Dim SaltValueBytes As Byte() = Text.Encoding.ASCII.GetBytes(Salt)
@@ -15,7 +15,7 @@
             Dim SymmetricKey As New Security.Cryptography.RijndaelManaged()
             SymmetricKey.Mode = Security.Cryptography.CipherMode.CBC
             Dim PlainTextBytes As Byte() = Text.Encoding.UTF8.GetBytes(data)
-            Dim Encryptor As Security.Cryptography.ICryptoTransform = symmetricKey.CreateEncryptor(KeyBytes, InitVectorBytes)
+            Dim Encryptor As Security.Cryptography.ICryptoTransform = SymmetricKey.CreateEncryptor(KeyBytes, InitVectorBytes)
             Dim MyMemoryStream As New IO.MemoryStream()
             Dim MyCryptoStream As New Security.Cryptography.CryptoStream(MyMemoryStream, Encryptor, Security.Cryptography.CryptoStreamMode.Write)
             MyCryptoStream.Write(PlainTextBytes, 0, PlainTextBytes.Length)
@@ -26,7 +26,7 @@
             Dim CipherText As String = Convert.ToBase64String(CipherTextBytes)
             Encrypt = CipherText
         Catch Ex As Exception
-            MsgBox("Caught Exception" & vbNewLine & vbCrLf & "At: " & Me.ToString & vbCrLf & "Sender: " & sender.ToString & vbCrLf & "Message: " & ex.Message)
+            MsgBox("Caught Exception" & vbNewLine & vbCrLf & "At: " & Me.ToString & vbCrLf & "Sender: " & sender.ToString & vbCrLf & "Message: " & Ex.Message)
             Return "Unable to encrypt data!"
         End Try
     End Function
