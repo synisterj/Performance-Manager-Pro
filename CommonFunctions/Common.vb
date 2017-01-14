@@ -70,7 +70,6 @@
             MsgBox("Caught Exception" & vbNewLine & vbCrLf & "At: " & Me.ToString & vbCrLf & "Sender: " & sender.ToString & vbCrLf & "Message: " & ex.Message)
             Return "Unable to decrypt data!"
         End Try
-
     End Function
     Public Function DateNow(ByVal sender As Object) As String
         Try
