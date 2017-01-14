@@ -1,48 +1,48 @@
 ﻿Public Class Functions
-    Public Function Encrypt(ByVal sender As Object, ByVal data As String, ByVal type As String, ByVal phrase As String, ByVal salt As String, Optional ByVal iterations As Integer = 2) As String
+    Public Function Encrypt(ByVal sender As Object, ByVal data As String, ByVal hashtype As String, ByVal passphrase As String, ByVal salt As String, Optional ByVal inivec As string = "@sYGD54g83HRyhv7", Optional ByVal iterations As Integer = 2, Optional ByVal keysize As Integer = 256) As String
         Encrypt = Nothing
-        Dim passPhrase As String = phrase
-        Dim saltValue As String = salt
-        Dim hashAlgorithm As String = type
-        Dim passwordIterations As Integer = iterations
-        Dim initVector As String = "@sYGD54g83HRyhv7"
-        Dim keySize As Integer = 256
+        Dim PassPhrase As String = passphrase
+        Dim Salt As String = salt
+        Dim HashAlgorithm As String = hashtype
+        Dim PasswordIterations As Integer = iterations
+        Dim InitVector As String = inivec
+        Dim KeySize As Integer = keysize
         Try
-            Dim initVectorBytes As Byte() = Text.Encoding.ASCII.GetBytes(initVector)
-            Dim saltValueBytes As Byte() = Text.Encoding.ASCII.GetBytes(saltValue)
-            Dim password As New Security.Cryptography.PasswordDeriveBytes(passPhrase, saltValueBytes, hashAlgorithm, passwordIterations)
-            Dim keyBytes As Byte() = password.GetBytes(keySize \ 8)
-            Dim symmetricKey As New Security.Cryptography.RijndaelManaged()
-            symmetricKey.Mode = Security.Cryptography.CipherMode.CBC
-            Dim plainTextBytes As Byte() = Text.Encoding.UTF8.GetBytes(data)
-            Dim encryptor As Security.Cryptography.ICryptoTransform = symmetricKey.CreateEncryptor(keyBytes, initVectorBytes)
-            Dim memoryStream As New IO.MemoryStream()
-            Dim cryptoStream As New Security.Cryptography.CryptoStream(memoryStream, encryptor, Security.Cryptography.CryptoStreamMode.Write)
-            cryptoStream.Write(plainTextBytes, 0, plainTextBytes.Length)
-            cryptoStream.FlushFinalBlock()
-            Dim cipherTextBytes As Byte() = memoryStream.ToArray()
-            memoryStream.Close()
-            cryptoStream.Close()
-            Dim cipherText As String = Convert.ToBase64String(cipherTextBytes)
-            Encrypt = cipherText
-        Catch ex As Exception
+            Dim InitVectorBytes As Byte() = Text.Encoding.ASCII.GetBytes(InitVector)
+            Dim SaltValueBytes As Byte() = Text.Encoding.ASCII.GetBytes(Salt)
+            Dim Password As New Security.Cryptography.PasswordDeriveBytes(PassPhrase, SaltValueBytes, HashAlgorithm, PasswordIterations)
+            Dim KeyBytes As Byte() = Password.GetBytes(KeySize \ 8)
+            Dim SymmetricKey As New Security.Cryptography.RijndaelManaged()
+            SymmetricKey.Mode = Security.Cryptography.CipherMode.CBC
+            Dim PlainTextBytes As Byte() = Text.Encoding.UTF8.GetBytes(data)
+            Dim Encryptor As Security.Cryptography.ICryptoTransform = symmetricKey.CreateEncryptor(KeyBytes, InitVectorBytes)
+            Dim MyMemoryStream As New IO.MemoryStream()
+            Dim MyCryptoStream As New Security.Cryptography.CryptoStream(MyMemoryStream, Encryptor, Security.Cryptography.CryptoStreamMode.Write)
+            MyCryptoStream.Write(PlainTextBytes, 0, PlainTextBytes.Length)
+            MyCryptoStream.FlushFinalBlock()
+            Dim CipherTextBytes As Byte() = MyMemoryStream.ToArray()
+            MyMemoryStream.Close()
+            MyCryptoStream.Close()
+            Dim CipherText As String = Convert.ToBase64String(CipherTextBytes)
+            Encrypt = CipherText
+        Catch Ex As Exception
             MsgBox("Caught Exception" & vbNewLine & vbCrLf & "At: " & Me.ToString & vbCrLf & "Sender: " & sender.ToString & vbCrLf & "Message: " & ex.Message)
             Return "Unable to encrypt data!"
         End Try
     End Function
-    Public Function Decrypt(ByVal sender As Object, ByVal data As String, ByVal type As String, ByVal phrase As String, ByVal salt As String, Optional ByVal iterations As Integer = 2) As String
+    Public Function Decrypt(ByVal sender As Object, ByVal data As String, ByVal type As String, ByVal phrase As String, ByVal salt As String, Optional ByVal inivec As string = "@sYGD54g83HRyhv7", Optional ByVal iterations As Integer = 2) As String
         Decrypt = Nothing
         Dim passPhrase As String = phrase
         Dim saltValue As String = salt
         Dim hashAlgorithm As String = type
         Dim passwordIterations As Integer = iterations
-        Dim initVector As String = "@sYGD54g83HRyhv7"
-        Dim keySize As Integer = 256
+        Dim initVector As String = inivec
+        Dim keySize As Integer = keysize
         Try
-            Dim initVectorBytes As Byte() = Text.Encoding.ASCII.GetBytes(initVector)
-            Dim saltValueBytes As Byte() = Text.Encoding.ASCII.GetBytes(saltValue)
-            Dim cipherTextBytes As Byte() = Convert.FromBase64String(data)
-            Dim password As New Security.Cryptography.PasswordDeriveBytes(passPhrase, saltValueBytes, hashAlgorithm, passwordIterations)
+            Dim InitVectorBytes As Byte() = Text.Encoding.ASCII.GetBytes(InitVector)
+            Dim SaltValueBytes As Byte() = Text.Encoding.ASCII.GetBytes(SaltValue)
+            Dim CipherTextBytes As Byte() = Convert.FromBase64String(data)
+            Dim Password As New Security.Cryptography.PasswordDeriveBytes(passPhrase, saltValueBytes, hashAlgorithm, passwordIterations)
             Dim keyBytes As Byte() = password.GetBytes(keySize \ 8)
             Dim symmetricKey As New Security.Cryptography.RijndaelManaged()
             symmetricKey.Mode = Security.Cryptography.CipherMode.CBC
